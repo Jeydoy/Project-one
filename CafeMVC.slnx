@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CafeDomain/CafeDomain.csproj" />
+  <Project Path="CafeInfrastructure/CafeInfrastructure.csproj" />
+</Solution>

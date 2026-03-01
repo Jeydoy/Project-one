@@ -186,13 +186,14 @@ public partial class DbCafeContext : DbContext
         modelBuilder.Entity<ProductCategory>(entity =>
         {
             entity
-                .HasNoKey()
-                .ToTable("product_categories");
+                .HasKey(e => new { e.CategoryId, e.ProductId });
+            entity.ToTable("product_categories");
 
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-            entity.HasOne(d => d.Category).WithMany()
+            entity.HasOne(d => d.Category)
+                .WithMany(p => p.ProductCategories)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("product_categories_category_id_fkey");

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CafeDomain.Model;
 
-public partial class Order
+public partial class Order:Entity
 {
-    public int Id { get; set; }
+   // public int Id { get; set; }
 
     public int StatusId { get; set; }
 

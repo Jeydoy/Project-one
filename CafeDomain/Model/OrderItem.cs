@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CafeDomain.Model;
 
-public partial class OrderItem
+public partial class OrderItem: Entity
 {
-    public int Id { get; set; }
+    //public int Id { get; set; }
 
     public int OrderId { get; set; }
 

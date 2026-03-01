@@ -1,7 +1,14 @@
+using CafeInfrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder .Services.AddDbContext<DbCafeContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -22,7 +29,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Categories}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

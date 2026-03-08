@@ -1,31 +1,36 @@
-html {
-  font-size: 14px;
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --color-cafe-brown: #4a3728;
+    --color-cafe-cream: #fdf5e6;
+    --color-cafe-gold: #d4af37;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+ [data-theme="blackcat"] {
+    --p: 31 35% 25%;
+    --s: 45 93% 47%;
+    --a: 0% 0% 10%;
+    --b1: 40 30% 95%;
+    --rounded-btn: 0.5rem;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+@layer base{
+    body {
+        @apply bg-cafe-cream text-cafe-brown min-h-screen font-sans;
+    }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
+    h1,h2,h3{
+        @apply font-serif font-bold tracking-tight;
+        }
+    }
 
-body {
-  margin-bottom: 60px;
-}
+@layer components{
+    .cafe-card {
+        @apply card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-cafe-gold ;
+    }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    .btn-add-to-cart {
+        @apply btn-primary gap-2 hover:scale-105 active:scale-95 transition-transform;
+    }
 }

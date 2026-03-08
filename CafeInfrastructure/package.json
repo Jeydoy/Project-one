@@ -1,0 +1,18 @@
+{
+  "name": "cafeinfrastructure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i wwwroot/css/site.css -o wwwroot/css/app.min.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i wwwroot/css/site.css -0 wwwroot/css/app.min.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "daisyui": "^5.5.19"
+  }
+}

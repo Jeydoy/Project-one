@@ -4,62 +4,40 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <h2 class="my-4">Меню нашого кафе🐈‍⬛ </h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Photo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAvaliable)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Photo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAvaliable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <form asp-action="Index" method="get" class="row g-3 mb-4 p-3 bg-light rounded">
+        <div class="col md-4">
+            <input type="text" name="searchString" class="form-control" placeholder="Пошук чогось смачненького..." />
+        </div>
+        <div class="col-md-3">
+            <select name="categoryId" asp-items="ViewBag.Categories" class="form-control">
+                <option value="">Усі категорії</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="number" name="maxPrice" class="form-control" placeholder="Макс.ціна">
+        </div>
+        <div class="col md-2">
+            <button type="submit" class="btn btn-dark w-100">Знайти</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@item.Photo" class="card-img-top" alt="Смакота" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Description</h5>
+                        <p class="card-text text-primary fw-bold">@item.Price грн</p>
+                        <a asp-controller="Cart" asp-action="Add" asp-route-productId="@item.Id" class="btn btn-success w-100">В кошик 🛒</a>
+</div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

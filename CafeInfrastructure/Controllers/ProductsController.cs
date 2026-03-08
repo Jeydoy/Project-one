@@ -20,9 +20,32 @@ namespace CafeInfrastructure.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryID, decimal? minPrice, decimal? maxPrice, string searchString )
         {
-            return View(await _context.Products.ToListAsync());
+           var products = _context.Products
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Description.Contains(searchString));
+            }
+
+            if ( categoryID.HasValue)
+            {
+                products = products.Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryID));
+            }
+
+            if(minPrice.HasValue)
+            {
+                products = products.Where(p => p.Price >= minPrice.Value);
+            }
+            if (maxPrice.HasValue) {
+                products = products.Where(p => p.Price <= maxPrice.Value); 
+            }
+
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "CategoryName"); 
+            return View(await products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -44,9 +67,9 @@ namespace CafeInfrastructure.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewBag.Categories = new MultiSelectList(_context.Categories, "Id", "CategoryName");
             return View();
         }
 
@@ -77,7 +100,7 @@ namespace CafeInfrastructure.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewBag.Categories = new MultiSelectList(_context.Categories, "Id", "CategoryName");
             return View(product);
         }
 
@@ -89,11 +112,16 @@ namespace CafeInfrastructure.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                .Include(p => p.ProductCategories)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
             }
+            var selectedCategoryIds = product.ProductCategories.Select(pc => pc.CategoryId).ToArray();
+            ViewBag.Categories = new MultiSelectList(_context.Categories, "Id", "CategoryName", selectedCategoryIds);
             return View(product);
         }
 
@@ -102,7 +130,7 @@ namespace CafeInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Photo,IsAvaliable,Price,Description,CreatedAt,UpdatedAt,Id")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Photo,IsAvaliable,Price,Description,CreatedAt,UpdatedAt,Id")] Product product, int[] selectedCategories)
         {
             if (id != product.Id)
             {
@@ -114,6 +142,21 @@ namespace CafeInfrastructure.Controllers
                 try
                 {
                     _context.Update(product);
+                    var existingLinks = _context.ProductCategories.Where(pc => pc.ProductId == product.Id);
+                    _context.ProductCategories.RemoveRange(existingLinks);
+                    
+                    if (selectedCategories != null && selectedCategories.Length > 0)
+                    {
+                        foreach (var categoryId in selectedCategories)
+                        {
+                            var productCategory = new ProductCategory
+                            {
+                                ProductId = product.Id,
+                                CategoryId = categoryId
+                            };
+                            _context.ProductCategories.Add(productCategory);
+                        }
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

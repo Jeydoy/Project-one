@@ -12,6 +12,8 @@ public partial class Category: Entity
 
     [Display(Name = "Категорія")]
 
+    [Required( ErrorMessage = "Назва категорії є обов'язковою")]
+    [StringLength(30, MinimumLength = 2) ]
     public string CategoryName { get; set; } = null!;
 
     [NotMapped]

@@ -4,47 +4,27 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="control-label">Назва та опис страви</label>
+        <input asp-for="Description" class="form-control" placeholder="Щось" />
+        <span asp-validation-for="Description" class="text-danger"></span> </div>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Photo" class="control-label"></label>
-                <input asp-for="Photo" class="form-control" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">
-                    Category
-                </label>
-                <select name="selectedCategories" class="form-control" asp-items="ViewBag.Catergories" multiple="multiple">
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="form-group mb-3">
+        <label asp-for="Price" class="control-label">Ціна(грн)</label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group mb-3">
+        <label class="control-label">Оберіть категорії</label>
+        <select name="selectedCategories" class="form-control" asp-items="ViewBag.Categories" multiple="multiple"></select>
+        <small class="form-text text-muted">Утримуйте Ctrl (або Cmd на Mac), щоб вибрати кілька категорій.</small>
+    </div>
 
+    <button type="submit" class="btn btn-dark">Додати в меню</button>
+</form>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
